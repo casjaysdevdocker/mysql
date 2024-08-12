@@ -32,16 +32,14 @@ PHPMYADMIN_DOWNLOAD_URL="https://files.phpmyadmin.net/phpMyAdmin/${PHPMYADMIN_VE
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Main script
 echo "Installing phpmyadmin from $PHPMYADMIN_DOWNLOAD_URL"
-[ -e "/etc/my.cnf" ] && rm -Rf "/etc/my.cnf"
 [ -d "$PHPMYADMIN_WWW_ROOT" ] && rm -Rf "$PHPMYADMIN_WWW_ROOT"
 if curl -q -LSsf "$PHPMYADMIN_DOWNLOAD_URL" -o "/tmp/phpmyadmin.zip"; then
-  mkdir -p "$PHPMYADMIN_WWW_ROOT" "/etc/phpmyadmin"
   unzip -q "/tmp/phpmyadmin.zip" -d "/tmp" && rm -Rf "/tmp/phpmyadmin.zip"
   mv -f "/tmp/phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages" "$PHPMYADMIN_WWW_ROOT"
   git clone --depth 1 "https://github.com/phpmyadmin/themes" "/tmp/themes"
-  for d in blueberry boodark bootstrap dark-orange darkmod-neo darkwolf eyed fallen fistu metro mhn; do
-    mkdir -p "$PHPMYADMIN_WWW_ROOT/themes/$d" &&
-      [ -d "/tmp/themes/$d" ] && copy "/tmp/themes/$d/." "$PHPMYADMIN_WWW_ROOT/themes/$d/"
+  for theme in blueberry boodark bootstrap dark-orange darkmod-neo darkwolf eyed fallen fistu metro mhn; do
+    echo "Installing $theme to $PHPMYADMIN_WWW_ROOT/themes/$theme"
+    mkdir -p "$PHPMYADMIN_WWW_ROOT/themes/$theme" && [ -d "/tmp/themes/$theme" ] && copy "/tmp/themes/$theme/." "$PHPMYADMIN_WWW_ROOT/themes/$theme/"
   done
   symlink "/etc/phpmyadmin/config.php" "$PHPMYADMIN_WWW_ROOT/config.inc.php"
   chown -Rf $WWW_USER "$PHPMYADMIN_WWW_ROOT"

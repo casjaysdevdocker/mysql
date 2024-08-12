@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1
 # Docker image for mysql using the alpine template
 ARG IMAGE_NAME="mysql"
 ARG PHP_SERVER="mysql"
