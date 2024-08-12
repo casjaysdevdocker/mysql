@@ -43,7 +43,7 @@ if curl -q -LSsf "$PHPMYADMIN_DOWNLOAD_URL" -o "/tmp/phpmyadmin.zip"; then
       [ -d "/tmp/themes/$d" ] && copy "/tmp/themes/$d/." "$PHPMYADMIN_WWW_ROOT/themes/$d/"
   done
   symlink "/etc/phpmyadmin/config.php" "$PHPMYADMIN_WWW_ROOT/config.inc.php"
-  chown -Rf $WWW_USER:$WWW_USER "$PHPMYADMIN_WWW_ROOT"
+  chown -Rf $WWW_USER "$PHPMYADMIN_WWW_ROOT"
   find "$PHPMYADMIN_WWW_ROOT" -type -d -exec chmod -f 777 {} \;
 else
   echo "Failed to install phpMyAdmin" >&2
