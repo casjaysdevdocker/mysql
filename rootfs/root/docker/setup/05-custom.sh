@@ -31,6 +31,7 @@ PHPMYADMIN_VERSION="${PHPMYADMIN_VERSION:-$(curl -q -LSsf https://api.github.com
 PHPMYADMIN_DOWNLOAD_URL="https://files.phpmyadmin.net/phpMyAdmin/${PHPMYADMIN_VERSION}/phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages.zip"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Main script
+echo "Installing phpmyadmin from $PHPMYADMIN_DOWNLOAD_URL"
 [ -e "/etc/my.cnf" ] && rm -Rf "/etc/my.cnf"
 [ -d "$PHPMYADMIN_WWW_ROOT" ] && rm -Rf "$PHPMYADMIN_WWW_ROOT"
 if curl -q -LSsf "$PHPMYADMIN_DOWNLOAD_URL" -o "/tmp/phpmyadmin.zip"; then
@@ -45,6 +46,7 @@ if curl -q -LSsf "$PHPMYADMIN_DOWNLOAD_URL" -o "/tmp/phpmyadmin.zip"; then
   symlink "/etc/phpmyadmin/config.php" "$PHPMYADMIN_WWW_ROOT/config.inc.php"
   chown -Rf $WWW_USER "$PHPMYADMIN_WWW_ROOT"
   find "$PHPMYADMIN_WWW_ROOT" -type -d -exec chmod -f 777 {} \;
+  echo "phpmyadmin has been installed to $PHPMYADMIN_WWW_ROOT"
 else
   echo "Failed to install phpMyAdmin" >&2
   exitCode=1
