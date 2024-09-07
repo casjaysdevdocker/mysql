@@ -27,8 +27,8 @@ exitCode=0
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Main script
-symlink "/etc/mysql/my.cnf" "/etc/my.cnf"
 [ -d "/tmp/etc" ] && copy "/tmp/etc/." "/etc/"
+[ -f "/etc/mysql/my.cnf" ] && symlink "/etc/mysql/my.cnf" "/etc/my.cnf"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set the exit code
 exitCode=$?

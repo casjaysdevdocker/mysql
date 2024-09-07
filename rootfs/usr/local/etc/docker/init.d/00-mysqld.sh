@@ -264,8 +264,8 @@ __post_execute() {
   local postMessageST="Running post commands for $SERVICE_NAME"   # message to show at start
   local postMessageEnd="Finished post commands for $SERVICE_NAME" # message to show at completion
   local sysname="${SERVER_NAME:-${FULL_DOMAIN_NAME:-$HOSTNAME}}"  # set hostname
-  local root_user_pass="${DATABASE_ROOT_PASSWORD:-$(__random_password)}"
-  local DATABASE_ROOT_PASSWORD="${root_user_pass:-$DATABASE_ROOT_PASSWORD}"
+  local root_user_pass="${root_user_pass:-$DATABASE_ROOT_PASSWORD:-$}"
+  local DATABASE_ROOT_PASSWORD="${root_user_pass:-$(__random_password)}"
   echo "$DATABASE_ROOT_PASSWORD" >"${ROOT_FILE_PREFIX}/${SERVICE_NAME}_pass"
   # wait
   sleep $waitTime

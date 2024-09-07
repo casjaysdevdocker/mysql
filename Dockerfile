@@ -24,7 +24,7 @@ ARG IMAGE_REPO="casjaysdevdocker/mysql"
 ARG IMAGE_VERSION="latest"
 ARG CONTAINER_VERSION=""
 
-ARG PULL_URL="casjaysdevdocker/php"
+ARG PULL_URL="casjaysdevdocker/nginx"
 ARG DISTRO_VERSION="${IMAGE_VERSION}"
 ARG BUILD_VERSION="${BUILD_DATE}"
 
