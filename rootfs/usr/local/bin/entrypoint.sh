@@ -82,10 +82,10 @@ SERVICE_UID="0" # set the user id
 SERVICE_GID="0" # set the group id
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Primary server port- will be added to server ports
-WEB_SERVER_PORT="" # port : 80,443
+WEB_SERVER_PORT="80" # port : 80,443
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Secondary ports
-SERVER_PORTS="" # specifiy other ports
+SERVER_PORTS="3306" # specifiy other ports
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Server directories
 WWW_ROOT_DIR="" # set default web dir

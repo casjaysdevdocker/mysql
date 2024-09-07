@@ -186,7 +186,7 @@ __run_pre_execute_checks() {
   # Put command to execute in parentheses
   {
     if [ ! -d "$DATABASE_DIR" ] || [ ! -f "$DATABASE_DIR/ibdata1" ]; then
-      rm -Rf "$DATABASE_DIR"
+      rm -Rf "${DATABASE_DIR:?}"/*
       mkdir -p "$DATABASE_DIR"
       chown -Rf $SERVICE_USER:$SERVICE_GROUP "$DATABASE_DIR"
       mysql_install_db --datadir=$DATABASE_DIR --user=$SERVICE_USER 2>/dev/null

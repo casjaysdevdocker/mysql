@@ -107,12 +107,12 @@ RUNAS_USER="root" # normally root
 #SERVICE_GID="0" # set the group id
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # execute command variables - keep single quotes variables will be expanded later
-EXEC_CMD_BIN='nginx'                    # command to execute
-EXEC_CMD_ARGS='-c $CONF_DIR/nginx.conf' # command arguments
-EXEC_PRE_SCRIPT=''                      # execute script before
+EXEC_CMD_BIN='nginx'                   # command to execute
+EXEC_CMD_ARGS='-c $ETC_DIR/nginx.conf' # command arguments
+EXEC_PRE_SCRIPT=''                     # execute script before
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Is this service a web server
-IS_WEB_SERVER="no"
+IS_WEB_SERVER="yes"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Is this service a database server
 IS_DATABASE_SERVICE="no"
