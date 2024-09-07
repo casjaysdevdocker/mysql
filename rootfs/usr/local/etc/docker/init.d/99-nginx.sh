@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-##@Version           :  202408111915-git
+##@Version           :  202408101458-git
 # @@Author           :  Jason Hempstead
 # @@Contact          :  jason@casjaysdev.pro
 # @@License          :  WTFPL
-# @@ReadME           :  05-nginx.sh --help
+# @@ReadME           :  00-nginx.sh --help
 # @@Copyright        :  Copyright: (c) 2024 Jason Hempstead, Casjays Developments
-# @@Created          :  Sunday, Aug 11, 2024 19:15 EDT
-# @@File             :  05-nginx.sh
+# @@Created          :  Saturday, Aug 10, 2024 14:58 EDT
+# @@File             :  00-nginx.sh
 # @@Description      :
 # @@Changelog        :  New script
 # @@TODO             :  Better documentation
@@ -73,7 +73,7 @@ DATABASE_BASE_DIR="${DATABASE_BASE_DIR:-/data/db}"
 DATABASE_DIR="${DATABASE_DIR_NGINX:-$DATABASE_BASE_DIR/sqlite}"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set webroot
-WWW_ROOT_DIR="/usr/share/httpd/default"
+WWW_ROOT_DIR="/var/lib/nginx/html"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Default predefined variables
 DATA_DIR="/data/nginx"   # set data directory
@@ -99,17 +99,17 @@ SERVICE_PORT="80"
 RUNAS_USER="root" # normally root
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # User and group in which the service switches to - IE: nginx,apache,mysql,postgres
-#SERVICE_USER="nginx"  # execute command as another user
-#SERVICE_GROUP="nginx" # Set the service group
+SERVICE_USER="nginx"  # execute command as another user
+SERVICE_GROUP="nginx" # Set the service group
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set user and group ID
 #SERVICE_UID="0" # set the user id
 #SERVICE_GID="0" # set the group id
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # execute command variables - keep single quotes variables will be expanded later
-EXEC_CMD_BIN='nginx'                   # command to execute
-EXEC_CMD_ARGS='-c $ETC_DIR/nginx.conf' # command arguments
-EXEC_PRE_SCRIPT=''                     # execute script before
+EXEC_CMD_BIN='nginx'                    # command to execute
+EXEC_CMD_ARGS='-c $CONF_DIR/nginx.conf' # command arguments
+EXEC_PRE_SCRIPT=''                      # execute script before
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Is this service a web server
 IS_WEB_SERVER="yes"
@@ -146,7 +146,7 @@ user_pass="${NGINX_USER_PASS_WORD:-}" # normal user password
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Additional variables
-
+PHPMYADMIN_WWW_ROOT="/usr/share/phpmyadmin"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Specifiy custom directories to be created
 ADD_APPLICATION_FILES=""
@@ -165,7 +165,7 @@ CMD_ENV=""
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Per Application Variables or imports
-PHPMYADMIN_WWW_ROOT="/usr/share/phpmyadmin"
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Custom prerun functions - IE setup WWW_ROOT_DIR
 __execute_prerun() {
@@ -173,7 +173,8 @@ __execute_prerun() {
   __init_config_etc
 
   # Define other actions/commands
-
+  mkdir -p "$CONF_DIR/conf.d" "$CONF_DIR/sites-enabled" "$CONF_DIR/streams-enabled" "$CONF_DIR/sites-available"
+  mkdir -p "$ETC_DIR/conf.d" "$ETC_DIR/sites-enabled" "$ETC_DIR/streams-enabled" "$ETC_DIR/sites-available" "$WWW_ROOT_DIR/.well-known"
 }
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Run any pre-execution checks
@@ -215,13 +216,13 @@ __update_conf_files() {
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # replace variables
-  __replace "REPLACE_PHPMYADMIN_WWW_ROOT" "$PHPMYADMIN_WWW_ROOT" "$CONF_DIR/nginx.conf"
+  # __replace "" "" "$CONF_DIR/nginx.conf"
   # replace variables recursively
   #  __find_replace "" "" "$CONF_DIR"
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # define actions
-
+  __replace "REPLACE_PHPMYADMIN_WWW_ROOT" "$PHPMYADMIN_WWW_ROOT" "$CONF_DIR/conf.d/phpmyadmin.conf"
   # exit function
   return $exitCode
 }

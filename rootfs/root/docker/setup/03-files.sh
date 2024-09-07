@@ -28,7 +28,13 @@ exitCode=0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Main script
 [ -d "/tmp/etc" ] && copy "/tmp/etc/." "/etc/"
+[ -d "/etc/nginx/conf.d" ] || mkdir -p "/etc/nginx/conf.d"
 [ -f "/etc/mysql/my.cnf" ] && symlink "/etc/mysql/my.cnf" "/etc/my.cnf"
+cat <<EOF >/etc/nginx/conf.d/phpmyadmin.conf
+location ^~ /phpmyadmin {
+    alias           "REPLACE_PHPMYADMIN_WWW_ROOT;
+}
+EOF
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set the exit code
 exitCode=$?

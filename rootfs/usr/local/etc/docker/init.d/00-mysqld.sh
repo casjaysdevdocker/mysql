@@ -107,7 +107,7 @@ SERVICE_GROUP="mysql" # Set the service group
 #SERVICE_GID="0" # set the group id
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # execute command variables - keep single quotes variables will be expanded later
-EXEC_CMD_BIN='mysqld'                                        # command to execute
+EXEC_CMD_BIN='mariadbd'                                      # command to execute
 EXEC_CMD_ARGS='--user=$SERVICE_USER --datadir=$DATABASE_DIR' # command arguments
 EXEC_PRE_SCRIPT=''                                           # execute script before
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -266,6 +266,7 @@ __post_execute() {
   local sysname="${SERVER_NAME:-${FULL_DOMAIN_NAME:-$HOSTNAME}}"  # set hostname
   local root_user_pass="${root_user_pass:-$DATABASE_ROOT_PASSWORD:-$}"
   local DATABASE_ROOT_PASSWORD="${root_user_pass:-$(__random_password)}"
+  db_root_user="${MYSQL_ROOT_USER_NAME:-root}"
   echo "$DATABASE_ROOT_PASSWORD" >"${ROOT_FILE_PREFIX}/${SERVICE_NAME}_pass"
   # wait
   sleep $waitTime
@@ -278,25 +279,29 @@ __post_execute() {
       bash -c "$CONF_DIR/mysql/init.sh"
     fi
     if [ -n "$DATABASE_CREATE" ]; then
-      mysql -v -u $SERVICE_USER <<MYSQL_SCRIPT
+      mariadb -v -u $db_root_user <<MYSQL_SCRIPT
 CREATE DATABASE IF NOT EXISTS $DATABASE_CREATE;
 MYSQL_SCRIPT
     fi
     if [ "$user_name" != "root" ] && [ -n "$user_name" ]; then
-      mysql -v -u $SERVICE_USER <<MYSQL_SCRIPT
+      mariadb -v -u $db_root_user <<MYSQL_SCRIPT
 CREATE USER IF NOT EXISTS '$user_name'@'%' IDENTIFIED BY '$user_pass';
 MYSQL_SCRIPT
     fi
     if [ "$user_name" != "root" ] && [ -n "$DATABASE_CREATE" ]; then
-      mysql -v -u $SERVICE_USER <<MYSQL_SCRIPT
+      mariadb -v -u $db_root_user <<MYSQL_SCRIPT
 GRANT ALL PRIVILEGES ON $DATABASE_CREATE.* TO '$user_name'@'%';
 MYSQL_SCRIPT
     elif [ "$user_name" = "root" ] && [ -n "$DATABASE_CREATE" ]; then
-      mysql -v -u $SERVICE_USER <<MYSQL_SCRIPT
+      mariadb -v -u $db_root_user <<MYSQL_SCRIPT
 GRANT ALL PRIVILEGES ON $DATABASE_CREATE.* TO 'root'@'localhost';
 MYSQL_SCRIPT
     fi
-    mysql -v -u $SERVICE_USER <<MYSQL_SCRIPT
+    mariadb -v -u $db_root_user <<MYSQL_SCRIPT
+CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY '$DATABASE_ROOT_PASSWORD';
+MYSQL_SCRIPT
+    mariadb -v -u $db_root_user <<MYSQL_SCRIPT
+ALTER USER 'root'@'%' IDENTIFIED BY '$DATABASE_ROOT_PASSWORD';
 ALTER USER 'root'@'localhost' IDENTIFIED BY '$DATABASE_ROOT_PASSWORD';
 FLUSH PRIVILEGES;
 MYSQL_SCRIPT
