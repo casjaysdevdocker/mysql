@@ -27,7 +27,7 @@ exitCode=0
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Main script
-
+[ -d "/tmp/etc" ] && cp -Rf "/tmp/etc"/* "/usr/local/share/template-files/defaults/"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set the exit code
 exitCode=$?
