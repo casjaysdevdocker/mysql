@@ -19,17 +19,18 @@ dockermgr update mysql
 ## Install and run container
   
 ```shell
-mkdir -p "$HOME/.local/share/srv/docker/mysql/volumes"
+dockerHome="/var/lib/srv/$USER/docker/casjaysdevdocker/mysql/mysql/latest/rootfs"
+mkdir -p "/var/lib/srv/$USER/docker/mysql/rootfs"
 git clone "https://github.com/dockermgr/mysql" "$HOME/.local/share/CasjaysDev/dockermgr/mysql"
-cp -Rfva "$HOME/.local/share/CasjaysDev/dockermgr/mysql/rootfs/." "$HOME/.local/share/srv/docker/mysql/volumes/"
+cp -Rfva "$HOME/.local/share/CasjaysDev/dockermgr/mysql/rootfs/." "$dockerHome/"
 docker run -d \
 --restart always \
 --privileged \
---name casjaysdevdocker-mysql \
+--name casjaysdevdocker-mysql-latest \
 --hostname mysql \
 -e TZ=${TIMEZONE:-America/New_York} \
--v "$HOME/.local/share/srv/docker/casjaysdevdocker-mysql/volumes/data:/data:z" \
--v "$HOME/.local/share/srv/docker/casjaysdevdocker-mysql/volumes/config:/config:z" \
+-v "$dockerHome/data:/data:z" \
+-v "$dockerHome/config:/config:z" \
 -p 80:80 \
 casjaysdevdocker/mysql:latest
 ```
@@ -46,8 +47,8 @@ services:
       - TZ=America/New_York
       - HOSTNAME=mysql
     volumes:
-      - "$HOME/.local/share/srv/docker/casjaysdevdocker-mysql/volumes/data:/data:z"
-      - "$HOME/.local/share/srv/docker/casjaysdevdocker-mysql/volumes/config:/config:z"
+      - "/var/lib/srv/$USER/docker/casjaysdevdocker/mysql/mysql/latest/rootfs/data:/data:z"
+      - "/var/lib/srv/$USER/docker/casjaysdevdocker/mysql/mysql/latest/rootfs/config:/config:z"
     ports:
       - 80:80
     restart: always
